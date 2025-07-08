@@ -1,7 +1,29 @@
-.DS_Store
-*.pyc
-*.egg-info
+
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Frappe Bench stuff
+env/
 *.swp
-tags
-node_modules
-__pycache__
+*.swo
+*.swn
+*.bak
+*.log
+*.pid
+
+# OS junk files
+.DS_Store
+Thumbs.db
+
+# Node modules
+node_modules/
+
+# Build files
+public/js/dist/
+public/css/
+public/build/
+
+# VS Code
+.vscode/
