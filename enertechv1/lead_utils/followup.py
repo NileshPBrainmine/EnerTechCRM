@@ -122,6 +122,28 @@ def notify_salesperson_after_due():
 
 # 4. Email the manager if 3+ days have passed without action
 def escalate_to_manager():
+    from frappe.utils import nowdate, add_days
+
+    # Step 1: Get users with "Manager" role
+    manager_users = frappe.get_all("Has Role", 
+        filters={"role": "Manager"}, 
+        fields=["parent"]
+    )
+
+    # Step 2: Get user emails from User doctype
+    manager_emails = [
+        user.email for user in frappe.get_all("User", 
+            filters={"name": ["in", [u.parent for u in manager_users]], "enabled": 1}, 
+            fields=["email"]
+        ) if user.email
+    ]
+
+    # Safety check
+    if not manager_emails:
+        frappe.log_error("No manager email found", "Lead Escalation")
+        return
+
+    # Step 3: Find delayed leads
     leads = frappe.get_all("Lead",
         filters={
             "follow_up_date": ["<", add_days(nowdate(), -3)],
@@ -131,12 +153,9 @@ def escalate_to_manager():
     )
 
     for lead in leads:
-        # Replace this with the actual manager's email or fetch from settings
-        manager_email = "manager@example.com"
-
-        # Email the manager
+        # Email all managers
         frappe.sendmail(
-            recipients=[manager_email],
+            recipients=manager_emails,
             subject="Lead Escalation: No Action Taken",
             message=f"""
             <p>Dear Manager,</p>
@@ -148,8 +167,44 @@ def escalate_to_manager():
             """
         )
 
-        # Optionally update the status
+        # Update lead status
         frappe.db.set_value("Lead", lead.name, "status", "Pending Follow-Up")
+
+
+
+
+
+
+
+# def escalate_to_manager():
+#     leads = frappe.get_all("Lead",
+#         filters={
+#             "follow_up_date": ["<", add_days(nowdate(), -3)],
+#             "status": ["not in", ["Converted", "Closed", "Pending Follow-Up"]]
+#         },
+#         fields=["name", "lead_name", "country", "owner"]
+#     )
+
+#     for lead in leads:
+#         # Replace this with the actual manager's email or fetch from settings
+#         manager_email = "manager@example.com"
+
+#         # Email the manager
+#         frappe.sendmail(
+#             recipients=[manager_email],
+#             subject="Lead Escalation: No Action Taken",
+#             message=f"""
+#             <p>Dear Manager,</p>
+#             <p>The assigned salesperson has not followed up on the lead: <b>{lead.lead_name}</b> for over 3 days.</p>
+#             <p>Country: <b>{lead.country or 'N/A'}</b></p>
+#             <p>Please check with the salesperson: <b>{lead.owner}</b>.</p>
+#             <br>
+#             <p>Regards,<br>CRM System</p>
+#             """
+#         )
+
+#         # Optionally update the status
+#         frappe.db.set_value("Lead", lead.name, "status", "Pending Follow-Up")
 
 
 
