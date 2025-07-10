@@ -17,6 +17,14 @@ scheduler_events = {
     ]
 }
 
+fixtures = [
+    "Custom Field",
+    "Property Setter",
+    # "Custom Script",
+    "Workflow",
+    "Print Format"
+]
+
 # Apps
 # ------------------
 
