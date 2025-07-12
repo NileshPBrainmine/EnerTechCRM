@@ -11,8 +11,8 @@ scheduler_events = {
         # Lead follow-up reminders
         "enertechv1.lead_utils.followup.notify_client_before_followup",
         # "enertechv1.lead_utils.followup.create_todo_on_followup_date",  # Uncomment if needed
-        # "enertechcrm.lead_utils.followup.create_lead_note_on_followup_date",  # Optional
-        "enertechcrm.lead_utils.followup.create_task_activity_on_followup_date",
+        # "enertechcrmv1.lead_utils.followup.create_lead_note_on_followup_date",  # Optional
+        "enertechcrmv1.lead_utils.followup.create_task_activity_on_followup_date",
         "enertechv1.lead_utils.followup.notify_salesperson_after_due",
         "enertechv1.lead_utils.followup.escalate_to_manager",
 
