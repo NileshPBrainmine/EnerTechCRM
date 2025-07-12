@@ -1,26 +1,48 @@
 app_name = "enertechv1"
 app_title = "EnerTechv1"
 app_publisher = "Brainmine AI"
-app_description = "Custom App for the EnterTech UPS "
+app_description = "Custom App for the EnerTech UPS"
 app_email = "nileshp01@brainmine.ai"
 app_license = "mit"
 
-
+# Scheduled Tasks
 scheduler_events = {
     "daily": [
+        # Lead follow-up reminders
         "enertechv1.lead_utils.followup.notify_client_before_followup",
-        # "enertechv1.lead_utils.followup.create_todo_on_followup_date", # < -- for the todo 
-        # "enertechcrm.lead_utils.followup.create_lead_note_on_followup_date",  # <-- updated for the notes/comment
-        "enertechcrm.lead_utils.followup.create_task_activity_on_followup_date",  # this one
+        # "enertechv1.lead_utils.followup.create_todo_on_followup_date",  # Uncomment if needed
+        # "enertechcrm.lead_utils.followup.create_lead_note_on_followup_date",  # Optional
+        "enertechcrm.lead_utils.followup.create_task_activity_on_followup_date",
         "enertechv1.lead_utils.followup.notify_salesperson_after_due",
-        "enertechv1.lead_utils.followup.escalate_to_manager"
+        "enertechv1.lead_utils.followup.escalate_to_manager",
+
+        # Quotation follow-up (new)
+        "enertechv1.quotation_utils.followup.send_client_followup"
+    ],
+    "hourly": [
+        # Ticket inactivity check (24-hour no-activity notifier)
+        "enertechv1.ticket_utils.inactivity_checker.notify_inactive_tickets"
     ]
 }
 
+# Doctype Event Hooks
+doc_events = {
+    "Quotation": {
+        "before_submit": "enertechv1.quotation_utils.hooks.set_sent_date"
+    },
+    "Ticket": {
+        "on_update": "enertechv1.ticket_utils.activity_hooks.update_last_activity"
+    },
+    "Comment": {
+        "after_insert": "enertechv1.ticket_utils.activity_hooks.update_last_activity"
+    }
+}
+
+# Fixtures to export and include with the app
 fixtures = [
-    "Custom Field",
+    {"doctype": "Custom Field", "filters": [["dt", "in", ["Quotation", "Ticket"]]]},
     "Property Setter",
-    # "Custom Script",
+    # "Custom Script",  # Uncomment if needed
     "Workflow",
     "Print Format"
 ]
