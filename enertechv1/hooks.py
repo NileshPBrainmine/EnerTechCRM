@@ -5,46 +5,23 @@ app_description = "Custom App for the EnerTech UPS"
 app_email = "nileshp01@brainmine.ai"
 app_license = "mit"
 
-# Scheduled Tasks
-scheduler_events = {
-    "daily": [
-        # Lead follow-up reminders
-        "enertechv1.lead_utils.followup.notify_client_before_followup",
-        # "enertechv1.lead_utils.followup.create_todo_on_followup_date",  # Uncomment if needed
-        "enertechv1.lead_utils.followup.create_task_activity_on_followup_date",
-        "enertechv1.lead_utils.followup.notify_salesperson_after_due",
-        "enertechv1.lead_utils.followup.escalate_to_manager",
 
-        # Quotation follow-up (new)
-        "enertechv1.quotation_utils.followup.send_client_followup"
-    ],
-    "hourly": [
-        # Ticket inactivity check (24-hour no-activity notifier)
-        "enertechv1.ticket_utils.inactivity_checker.notify_inactive_tickets"
-    ]
-}
-
-# Doctype Event Hooks
-doc_events = {
-    "Quotation": {
-        "before_submit": "enertechv1.quotation_utils.hooks.set_sent_date"
-    },
-    "Ticket": {
-        "on_update": "enertechv1.ticket_utils.activity_hooks.update_last_activity"
-    },
-    "Comment": {
-        "after_insert": "enertechv1.ticket_utils.activity_hooks.update_last_activity"
-    }
-}
 
 # Fixtures to export and include with the app
 fixtures = [
-    {"doctype": "Custom Field", "filters": [["dt", "in", ["Quotation", "Ticket"]]]},
+    "Custom Field",
     "Property Setter",
-    # "Custom Script",  # Uncomment if needed
-    "Workflow",
-    "Print Format"
+    "Client Script",
+    "Server Script",
+    "Custom Script",
+    "Workspace",
+    "Web Page",
+    "Print Format",
+    "Report",
+    "Custom DocPerm",
+    "Translation"
 ]
+
 
 # Apps
 # ------------------
